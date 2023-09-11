@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital@1&family=Roboto:wght@300;400;500&display=swap');
+
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+    font-family: 'Raleway', sans-serif;
+}
+
+html {
+    background-color: $color-fondo;
+    background-image: url(/imgs/ruido-background-img.webp);
+    scroll-behavior: smooth;
+    margin: auto;
+    color: #ffffff;
+    overflow-x: hidden;
+}
+
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-top: 75px;
+}
+
+::selection {
+    background: $color-seleccion;
+}
+
+::-moz-selection {
+    background: $color-seleccion;
+}
+
+.con-overflow-x{
+    overflow-x: hidden !important;
+}

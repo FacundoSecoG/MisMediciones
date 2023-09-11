@@ -1,0 +1,94 @@
+footer {
+    background-color: $color-principal;
+    height: 200px;
+    width: 100vw;
+    display: block;
+    position: relative;
+    border-top: 6px solid $color-secundario;
+    margin-top: 120px;
+
+    .logos-descargas {
+        position: relative;
+        width: 50%;
+        min-width: 300px;
+        max-width: 500px;
+        border-radius: 200px;
+        background-color: $color-principal;
+        display: flex;
+        box-shadow: 0px 10px 10px -5px $color-secundario;
+        justify-content: space-between;
+        padding: 45px;
+        transform: translate(-50%, -50%);
+        top: 0;
+        left: 50%;
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: -5.6px;
+            left: -6px;
+            width: 100%;
+            height: 50%;
+            background-color: $color-principal;
+            border-top: 6px solid $color-secundario;
+            border-left: 6px solid $color-secundario;
+            border-right: 6px solid $color-secundario;
+            border-radius: 200px 200px 0 0;
+            z-index: -1;
+        }
+        button{
+            background-color: transparent;
+            border: none;
+            i {
+                color: $color-secundario;
+                display: block;
+                width: 90px;
+                height: 90px;
+                max-width: 90px;
+                max-height: 90px;
+                font-size: 90px;
+            }
+        }
+    }
+
+    p {
+        width: 70%;
+        margin: auto;
+        margin-top: 2rem;
+        text-align: center;
+        display: block;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 60%;
+        left: 50%;
+    }
+}
+
+.contenedor-logo {
+    position: relative;
+    display: inline-block;
+}
+
+.contenedor-logo .contenedor-logo-texto {
+    margin-bottom: 5px;
+    visibility: hidden;
+    width: auto;
+    background-color: $color-principal;
+    color: $color-secundario;
+    border: 2px solid $color-secundario;
+    text-align: center;
+    padding: 5px;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 60%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.contenedor-logo:hover .contenedor-logo-texto {
+    visibility: visible;
+    opacity: 1;
+}
