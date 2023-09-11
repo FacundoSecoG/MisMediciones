@@ -67,9 +67,11 @@
 
     nav {
         width: 100vw !important;
-        h2{
+
+        h2 {
             font-size: 15px !important;
         }
+
         #check {
             &:checked~ul {
                 left: 0;
@@ -113,8 +115,15 @@
     }
 }
 
-@media screen and (max-width: 500px) {
-    footer {
-        margin-top: 50%;
+@media only screen and (max-width: 600px) {
+    body {
+        max-width: 100vw;
+    }
+
+    table {
+        overflow-x: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
