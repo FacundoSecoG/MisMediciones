@@ -66,6 +66,10 @@
     }
 
     nav {
+        width: 100vw !important;
+        h2{
+            font-size: 15px !important;
+        }
         #check {
             &:checked~ul {
                 left: 0;
@@ -93,7 +97,7 @@
                 align-items: center;
 
                 a {
-                    font-size: 20px;
+                    font-size: 15px;
 
                     &:hover {
                         color: $color-secundario;

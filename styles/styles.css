@@ -11,7 +11,7 @@
 
 html {
   background-color: rgba(78, 31, 118, 0.5176470588);
-  background-image: url(/imgs/ruido-background-img.webp);
+  background-image: url(../../imgs/ruido-background-img.webp);
   scroll-behavior: smooth;
   margin: auto;
   color: #ffffff;
@@ -72,7 +72,7 @@ header {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 100vw;
   z-index: 2000;
 }
 header nav {
@@ -424,6 +424,12 @@ footer p {
   .fotoDePerfil img {
     display: none;
   }
+  nav {
+    width: 100vw !important;
+  }
+  nav h2 {
+    font-size: 15px !important;
+  }
   nav #check:checked ~ ul {
     left: 0;
   }
@@ -447,7 +453,7 @@ footer p {
     align-items: center;
   }
   nav ul li a {
-    font-size: 20px;
+    font-size: 15px;
   }
   nav ul li a:hover {
     color: #ff06d1;
