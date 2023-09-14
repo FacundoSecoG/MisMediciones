@@ -1,54 +1,189 @@
 let comidas = JSON.parse(localStorage.getItem('comidas')) || [];
 
+const tipoComidaSelect = document.getElementById('tipoComida');
+const insulinaTardiaContainer = document.getElementById('insulinaTardiaContainer');
+const comidaNormalContainer = document.getElementById('tipoDeComidaNormal');
+const formSioNo = document.getElementById('camposDelForm');
+
+tipoComidaSelect.addEventListener('change', function () {
+    actualizarFormulario();
+});
+
+function actualizarFormulario() {
+    const tipoComida = tipoComidaSelect.value;
+
+    if (tipoComida === 'Opciones') {
+        formSioNo.style.display = 'none';
+    } else if (tipoComida === 'insulinaTardia') {
+        insulinaTardiaContainer.style.display = 'block';
+        formSioNo.style.display = 'Block';
+        comidaNormalContainer.style.display = 'none';
+    } else {
+        insulinaTardiaContainer.style.display = 'none';
+        comidaNormalContainer.style.display = 'block';
+        formSioNo.style.display = 'Block';
+    }
+}
+
+function calcularPromedioInsulina() {
+    let totalInsulina = 0;
+    let count = 0;
+
+    comidas.forEach(comida => {
+        if (comida.tipoComida !== "insulinaTardia") {
+            totalInsulina += parseFloat(comida.insulina);
+            count++;
+        }
+    });
+
+    if (count === 0) {
+        return 0;
+    }
+
+    return (totalInsulina / count).toFixed(2);
+}
+
+function calcularPromedioCarbohidratos() {
+    let totalCarbohidratos = 0;
+    let count = 0;
+
+    comidas.forEach(comida => {
+        if (comida.tipoComida !== "insulinaTardia") {
+            totalCarbohidratos += parseFloat(comida.carbohidratos);
+            count++;
+        }
+    });
+
+    if (count === 0) {
+        return 0;
+    }
+
+    return (totalCarbohidratos / count).toFixed(2);
+}
+
+function calcularPromedioGlucosa() {
+    let totalGlucosa = 0;
+    let count = 0;
+
+    comidas.forEach(comida => {
+        if (comida.tipoComida !== "insulinaTardia") {
+            totalGlucosa += parseFloat(comida.glucosa);
+            count++;
+        }
+    });
+
+    if (count === 0) {
+        return 0;
+    }
+
+    return (totalGlucosa / count).toFixed(2);
+}
+
 const promedioInsulina = calcularPromedioInsulina();
 document.getElementById('promedioInsulina').textContent = promedioInsulina;
 
 const promedioCarbohidratos = calcularPromedioCarbohidratos();
 document.getElementById('promedioCarbohidratos').textContent = promedioCarbohidratos;
 
-
 const promedioGlucosa = calcularPromedioGlucosa();
 document.getElementById('glucosaDiaria').textContent = promedioGlucosa;
+
+
+document.getElementById("fecha").addEventListener("change", function () {
+    var selectedDate = this.value;
+    var table = document.getElementById("tablaComidas");
+    var rows = table.getElementsByTagName("tr");
+
+    var dateExists = false;
+    for (var i = 1; i < rows.length; i++) {
+        var rowDate = rows[i].cells[0].innerHTML;
+        if (rowDate === selectedDate) {
+            dateExists = true;
+            break;
+        }
+    }
+
+    var insulinaTardiaInput = document.getElementById("insulinaTardia");
+    if (dateExists) {
+        insulinaTardiaInput.style.display = "none";
+    } else {
+        insulinaTardiaInput.style.display = "block";
+    }
+});
+
+function validarFormulario(event) {
+    var seleccion = document.getElementById('tipoComida').value;
+
+    if (seleccion === "Opciones") {
+        event.preventDefault();
+        alert('Por favor selecciona una opción');
+    }
+}
+
 
 function agregarComida(event) {
     event.preventDefault();
 
     const fecha = document.getElementById('fecha').value;
     const hora = document.getElementById('hora').value;
-    const insulina = document.getElementById('insulina').value;
-    const glucosa = document.getElementById('glucosa').value;
-    const carbohidratos = document.getElementById('carbohidratos').value;
-    const alimentos = document.getElementById('comida').value;
     const tipoComida = document.getElementById('tipoComida').value;
 
-    const comida = {
-        fecha,
-        hora,
-        insulina,
-        glucosa,
-        carbohidratos,
-        alimentos,
-        tipoComida
-    };
+    if (tipoComida === 'insulinaTardia') {
+        const insulinaTardia = document.getElementById('insulinaTardia').value;
 
-    const mealExists = comidas.some(c => c.fecha === comida.fecha && c.tipoComida === comida.tipoComida);
+        const comida = {
+            fecha,
+            hora,
+            insulina: insulinaTardia,
+            tipoComida: 'insulinaTardia'
+        };
 
-    if (mealExists) {
-        alert('La comida ingresada ya existe.');
+        const mealExists = comidas.some(c => c.fecha === comida.fecha && c.tipoComida === comida.tipoComida);
+
+        if (mealExists) {
+            alert('La comida ingresada ya existe.');
+        } else {
+            comidas.push(comida);
+            localStorage.setItem('comidas', JSON.stringify(comidas));
+            actualizarTablaComidas();
+        }
+
+        document.getElementById('insulinaTardia').value = '';
+        document.getElementById('hora').value = '';
+        document.getElementById('fecha').value = '';
     } else {
-        comidas.push(comida);
-        localStorage.setItem('comidas', JSON.stringify(comidas));
-        actualizarTablaComidas();
+        const insulina = document.getElementById('insulina').value;
+        const glucosa = document.getElementById('glucosa').value;
+        const carbohidratos = document.getElementById('carbohidratos').value;
+        const alimentos = document.getElementById('comida').value;
+
+        const comida = {
+            fecha,
+            hora,
+            insulina,
+            glucosa,
+            carbohidratos,
+            alimentos,
+            tipoComida
+        };
+
+        const mealExists = comidas.some(c => c.fecha === comida.fecha && c.tipoComida === comida.tipoComida);
+
+        if (mealExists) {
+            alert('La comida ingresada ya existe.');
+        } else {
+            comidas.push(comida);
+            localStorage.setItem('comidas', JSON.stringify(comidas));
+            actualizarTablaComidas();
+        }
+
+        document.getElementById('insulina').value = '';
+        document.getElementById('glucosa').value = '';
+        document.getElementById('carbohidratos').value = '';
+        document.getElementById('alimentos').value = '';
+        document.getElementById('hora').value = '';
+        document.getElementById('fecha').value = '';
     }
-
-    localStorage.setItem('comidas', JSON.stringify(comidas));
-
-    document.getElementById('insulina').value = '';
-    document.getElementById('glucosa').value = '';
-    document.getElementById('carbohidratos').value = '';
-    document.getElementById('comida').value = '';
-
-    actualizarTablaComidas();
 
     const promedioInsulina = calcularPromedioInsulina();
     document.getElementById('promedioInsulina').textContent = promedioInsulina;
@@ -60,200 +195,200 @@ function agregarComida(event) {
     document.getElementById('glucosaDiaria').textContent = promedioGlucosa;
 }
 
+function parseDate(dateString) {
+    const [year, month, day] = dateString.split('-');
+    return Date.parse(`${year}-${month}-${day}`);
+}
+
+
 function actualizarTablaComidas() {
-    // Start with a clean slate
-    tablaComidas.innerHTML = "";
+    const tablaComidas = document.getElementById('tablaComidas');
+    tablaComidas.innerHTML = '';
 
-    let fechaSection = null;
-    let tipoComidaSection = null;
-    let fecha = null;
-    let tipoComida = null;
-    let fechaAnterior = null;
-    let isFirstComida = true;
-    let ordenComidas = {
-        "desayuno": 1,
-        "almuerzo": 2,
-        "merienda": 3,
-        "cena": 4
-    };    
+    const sortingOrders = ['insulinaTardia', 'desayuno', 'almuerzo', 'merienda', 'cena'];
 
-    comidas.sort((a, b) => {
-        return new Date(b.fecha) - new Date(a.fecha);
-    });
-    
-    comidas.sort((a, b) => {
-        if (a.fecha === b.fecha) {
-            return ordenComidas[a.tipoComida] - ordenComidas[b.tipoComida];
-        }
-    });
-
-    comidas.forEach(comida => {
-
-        // If we encounter a new date, create a new fechaSection
-        // and reset the tipoComida tracker
-        if (comida.fecha !== fecha) {
-            fecha = comida.fecha;
-            tipoComida = null;
-
-            fechaSection = document.createElement('section');
-            const fechaTitle = document.createElement('h2');
-            fechaTitle.textContent = fecha;
-            fechaSection.appendChild(fechaTitle);
-            fechaSection.className = 'section-fecha'
-
-            // Create hr element
-            const hr = document.createElement('hr');
-            hr.className = 'hr-comidas';
-
-            // Append hr and fechaSection to tablaComidas
-            if (fecha !== comidas[0].fecha) {
-                tablaComidas.appendChild(hr);
+    if (comidas.length > 0) {
+        const comidasOrdenadas = comidas.sort((a, b) => {
+            const dateA = new Date(a.fecha);
+            const dateB = new Date(b.fecha);
+            if (dateA > dateB) {
+                return -1;
             }
-            tablaComidas.appendChild(fechaSection);
-        }
-
-        // If we encounter a new type of meal within the current date,
-        // create a new tipoComidaSection
-        if (comida.tipoComida !== tipoComida) {
-            tipoComida = comida.tipoComida;
-
-            tipoComidaSection = document.createElement('section');
-            tipoComidaSection.className = 'section-Comidas';
-            const tipoComidaTitle = document.createElement('h3');
-            tipoComidaTitle.textContent = tipoComida;
-            tipoComidaSection.appendChild(tipoComidaTitle);
-
-            const table = document.createElement('table');
-            table.innerHTML = `
-                <tr>
-                    <th>Hora</th>
-                    <th>Insulina</th>
-                    <th>Carbohidratos</th>
-                    <th>Glucosa</th>
-                    <th>Comida</th>
-                </tr>
-            `;
-            tipoComidaSection.appendChild(table);
-
-            fechaSection.appendChild(tipoComidaSection);
-        }
-
-        // Add a new row to the current tipoComidaSection
-        const table = tipoComidaSection.querySelector('table');
-        const rowHtml = `
-            <tr>
-                <td>${comida.hora}</td>
-                <td>${comida.insulina}</td>
-                <td>${comida.carbohidratos}</td>
-                <td>${comida.glucosa}</td>
-                <td>${comida.alimentos}</td>
-            </tr>
-        `;
-        table.innerHTML += rowHtml;
-
-        // Add the delete button outside the table, in the tipoComidaSection
-        const btnEliminar = document.createElement('button');
-        btnEliminar.classList.add('btnEliminar', 'top-right');
-        btnEliminar.innerHTML = '<i class="fas fa-times"></i>';
-        btnEliminar.className = 'btnEliminar';
-        btnEliminar.addEventListener('click', function () {
-            comidas = comidas.filter(c => c !== comida);
-            localStorage.setItem('comidas', JSON.stringify(comidas));
-            actualizarTablaComidas();
+            if (dateA < dateB) {
+                return 1;
+            }
+            const orderComparison = sortingOrders.indexOf(a.tipoComida) - sortingOrders.indexOf(b.tipoComida);
+            return orderComparison;
         });
-        tipoComidaSection.appendChild(btnEliminar);
-    });
 
-    for (let fecha in comidasAgrupadas) {
-        const tablaFecha = document.createElement('table');
-        tablaFecha.innerHTML = `<thead><tr><td colspan="7">${fecha}</td></tr></thead><tbody></tbody>`;
-        cuerpoTablaComidas.appendChild(tablaFecha);
+        const seccionesPorFecha = {};
 
-        const cuerpoTablaFecha = tablaFecha.querySelector('tbody');
+        comidasOrdenadas.forEach(comida => {
+            if (!(comida.fecha in seccionesPorFecha)) {
+                seccionesPorFecha[comida.fecha] = document.createElement('section');
+                seccionesPorFecha[comida.fecha].classList.add('section-fecha');
 
-        for (let tipo in comidasAgrupadas[fecha]) {
-            if (comidasAgrupadas[fecha][tipo].length > 0) {
-                const filaTipo = document.createElement('tr');
-                filaTipo.innerHTML = `<td colspan="7">${tipo}</td>`;
-                cuerpoTablaFecha.appendChild(filaTipo);
+                const fechaEncabezado = document.createElement('h2');
+                fechaEncabezado.textContent = comida.fecha;
+                seccionesPorFecha[comida.fecha].appendChild(fechaEncabezado);
 
-                const filaHeaders = document.createElement('tr');
-                filaHeaders.innerHTML = `
-                <th>Hora</th>
-                <th>Insulina</th>
-                <th>Carbohidratos</th>
-                <th>Glucosa</th>
-                <th>Comida</th>
-                <th>Eliminar</th>
-                `;
-                cuerpoTablaFecha.appendChild(filaHeaders);
-
-                for (let comida of comidasAgrupadas[fecha][tipo]) {
-                    const filaComida = document.createElement('tr');
-                    filaComida.innerHTML = `
-                        <td>${comida.hora}</td>
-                        <td>${comida.insulina}</td>
-                        <td>${comida.carbohidratos}</td>
-                        <td>${comida.glucosa}</td>
-                        <td>${comida.alimentos}</td>
-                    `;
-
-                    const btnEliminar = document.createElement('button');
-                    const icon = document.createElement('i');
-                    btnEliminar.className = 'btnEliminar';
-                    icon.className = 'myIconClass';
-                    icon.className = 'fas fa-trash fa-4x';
-                    icon.style.color = 'red';
-                    btnEliminar.appendChild(icon);
-                    btnEliminar.classList.add('eliminar');
-
-                    filaComida.appendChild(btnEliminar);
-
-                    btnEliminar.addEventListener('click', function (event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-
-                        comidas = comidas.filter(c => c !== comida);
-
-                        localStorage.setItem('comidas', JSON.stringify(comidas));
-
-                        actualizarTablaComidas();
-                    });
-
-                    cuerpoTablaFecha.appendChild(filaComida);
-
-                    const promedioInsulina = calcularPromedioInsulina();
-                    document.getElementById('promedioInsulina').textContent = promedioInsulina;
-
-                    const promedioCarbohidratos = calcularPromedioCarbohidratos();
-                    document.getElementById('promedioCarbohidratos').textContent = promedioCarbohidratos;
-
-                    const promedioGlucosa = calcularPromedioGlucosa();
-                    document.getElementById('glucosaDiaria').textContent = promedioGlucosa;
-                }
+                tablaComidas.appendChild(seccionesPorFecha[comida.fecha]);
             }
+
+            const seccionTipoComida = document.createElement('section');
+            seccionTipoComida.classList.add('section-Comidas');
+            const tipoComidaEncabezado = document.createElement('h3');
+            tipoComidaEncabezado.textContent = comida.tipoComida;
+            tipoComidaEncabezado.classList.add('titulo-tablacomidas');
+            seccionTipoComida.appendChild(tipoComidaEncabezado);
+
+            const fila = document.createElement('tr');
+
+            if (comida.tipoComida === "insulinaTardia") {
+                const tabla = document.createElement('table');
+                tabla.classList.add('tabla-registroDeComidas');
+
+                const headerRow = document.createElement('tr');
+                const headers = ['Hora', 'Insulina Lantus'];
+                for (let i = 0; i < headers.length; i++) {
+                    const th = document.createElement('th');
+                    th.textContent = headers[i];
+                    headerRow.appendChild(th);
+                }
+                tabla.appendChild(headerRow);
+
+                const fila = document.createElement('tr');
+
+                const celdaHora = document.createElement('td');
+                celdaHora.textContent = comida.hora;
+                fila.appendChild(celdaHora);
+
+                const celdaInsulinaTardia = document.createElement('td');
+                celdaInsulinaTardia.textContent = comida.insulina;
+                fila.appendChild(celdaInsulinaTardia);
+
+                tabla.appendChild(fila);
+                seccionTipoComida.appendChild(tabla);
+
+                const btnEliminar = document.createElement('button');
+                btnEliminar.innerHTML = '<i class="fas fa-times"></i>';
+                btnEliminar.classList.add('btnEliminar');
+                btnEliminar.addEventListener('click', () => {
+                    eliminarComida(comida);
+                    fila.remove();
+                    if (seccionTipoComida.children.length === 1) {
+                        seccionTipoComida.remove();
+                    }
+                    if (Object.keys(seccionesPorFecha[comida.fecha].children).length === 1) {
+                        seccionesPorFecha[comida.fecha].remove();
+                    }
+                });
+
+                fila.appendChild(btnEliminar);
+            } else {
+                const tablaComidasTipo = document.createElement('table');
+                tablaComidasTipo.classList.add('tabla-registroDeComidas');
+
+                const cabecera = document.createElement('tr');
+                const headers = ['Hora', 'Insulina', 'Glucosa', 'Carbohidratos', 'Alimentos'];
+
+                for (let i = 0; i < headers.length; i++) {
+                    const th = document.createElement('th');
+                    th.textContent = headers[i];
+                    cabecera.appendChild(th);
+                }
+
+                tablaComidasTipo.appendChild(cabecera);
+
+
+                const hora = document.createElement('td');
+                hora.textContent = comida.hora;
+                fila.appendChild(hora);
+
+                const insulina = document.createElement('td');
+                insulina.textContent = comida.insulina;
+                fila.appendChild(insulina);
+
+                const glucosa = document.createElement('td');
+                glucosa.textContent = comida.glucosa;
+                fila.appendChild(glucosa);
+
+                const carbohidratos = document.createElement('td');
+                carbohidratos.textContent = comida.carbohidratos;
+                fila.appendChild(carbohidratos);
+
+                const alimentos = document.createElement('td');
+                alimentos.textContent = comida.alimentos;
+                fila.appendChild(alimentos);
+
+                tablaComidasTipo.appendChild(fila);
+                seccionTipoComida.appendChild(tablaComidasTipo);
+            }
+
+            const btnEliminar = document.createElement('button');
+            btnEliminar.innerHTML = '<i class="fas fa-times"></i>';
+            btnEliminar.classList.add('btnEliminar');
+            btnEliminar.addEventListener('click', () => {
+                eliminarComida(comida);
+                fila.remove();
+                if (seccionTipoComida.children.length === 1) {
+                    seccionTipoComida.remove();
+                }
+                if (Object.keys(seccionesPorFecha[comida.fecha].children).length === 1) {
+                    seccionesPorFecha[comida.fecha].remove();
+                }
+            });
+
+            fila.appendChild(btnEliminar);
+
+            seccionesPorFecha[comida.fecha].appendChild(seccionTipoComida);
+        });
+
+        const fechas = Object.keys(seccionesPorFecha);
+        for (let i = 0; i < fechas.length - 1; i++) {
+            const hr = document.createElement('hr');
+            hr.classList.add('hr-comidas');
+            tablaComidas.insertBefore(hr, seccionesPorFecha[fechas[i + 1]]);
         }
     }
 }
 
-document.getElementById('closeButton').addEventListener('click', function() {
+
+
+
+
+
+
+
+
+
+function eliminarComida(comida) {
+    const index = comidas.findIndex(c => c === comida);
+    if (index !== -1) {
+        comidas.splice(index, 1);
+
+        // Guardar los cambios en el almacenamiento local
+        localStorage.setItem('comidas', JSON.stringify(comidas));
+
+        // Actualizar la tabla de comidas en la interfaz de usuario
+        actualizarTablaComidas();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+document.getElementById('closeButton').addEventListener('click', function () {
     document.getElementById('welcomeImageContainer').style.display = 'none';
 });
-
-function calcularPromedioInsulina() {
-    const promedioInsulina = Math.ceil(comidas.reduce((total, comida) => total + Number(comida.insulina), 0) / comidas.length);
-    return (promedioInsulina)
-}
-
-function calcularPromedioCarbohidratos() {
-    const promedioCarbohidratos = Math.ceil(comidas.reduce((total, comida) => total + Number(comida.carbohidratos), 0) / comidas.length);
-    return (promedioCarbohidratos)
-}
-
-function calcularPromedioGlucosa() {
-    const promedioGlucosa = Math.ceil(comidas.reduce((total, comida) => total + Number(comida.glucosa), 0) / comidas.length);
-    return (promedioGlucosa)
-}
 
 function generarPDF() {
     event.preventDefault();
@@ -293,7 +428,7 @@ function generarPDF() {
         let imgPosY = (pdfHeight - imgHeight) / 2;
 
         // Add the image to the PDF, adjusting the position and dimensions as per your requirements
-        doc.addImage(imgData, 'PNG', imgPosX, imgPosY, imgWidth, imgHeight); 
+        doc.addImage(imgData, 'PNG', imgPosX, imgPosY, imgWidth, imgHeight);
 
         doc.save('comidas.pdf');
     });
@@ -362,6 +497,18 @@ horas = horas < 10 ? '0' + horas : horas;
 minutos = minutos < 10 ? '0' + minutos : minutos;
 document.getElementById('hora').value = horas + ':' + minutos;
 
-document.getElementById('formularioComida').addEventListener('submit', agregarComida);
+document.getElementById('formularioComida').addEventListener('submit', function (event) {
+    agregarComida(event);
+    validarFormulario(event);
+});
 
-actualizarTablaComidas();
+document.getElementById('tipoComida').addEventListener('change', actualizarFormulario);
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    actualizarTablaComidas();
+});
+
+window.addEventListener('load', function () {
+    actualizarFormulario();
+});

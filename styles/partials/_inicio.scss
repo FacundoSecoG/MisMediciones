@@ -70,15 +70,14 @@
 
     .titulo-tablacomidas {
         font-size: 3rem;
+        padding: 3rem;
         text-align: center;
     }
 
     .tabla-registroDeComidas {
-        margin-bottom: 2rem;
         width: 100%;
         max-width: 1100px;
         margin: auto;
-        padding: 4rem 0;
 
         .hr-comidas {
             border-radius: 200px;
@@ -117,8 +116,8 @@
 
             .btnEliminar {
                 position: absolute;
-                top: 66px;
-                right: -25px;
+                top: 161.5px;
+                right: -23px;
                 background: none;
                 border: none;
                 cursor: pointer;

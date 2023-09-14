@@ -36,37 +36,47 @@
             <form id="formularioComida" class="formularioComida">
                 <h2>Ingresar los datos de la comida:</h2>
 
-                <label for="fecha">Fecha:</label>
-                <input type="date" id="fecha" required>
-
-                <label for="hora">Hora:</label>
-                <input type="time" id="hora" required>
-
-                <label for="insulina">Insulina:</label>
-                <input type="number" id="insulina" min="0" required>
-
-                <label for="carbohidratos">Carbohidratos:</label>
-                <input type="number" id="carbohidratos" min="0" required>
-
-                <label for="glucosa">Glucosa en Sangre:</label>
-                <input type="number" id="glucosa" min="0" required>
-
-                <label for="comida">Comida:</label>
-                <input type="text" id="comida" min="0" required>
-
                 <label for="tipoComida">Tipo de comida:</label>
                 <select id="tipoComida" required>
+                    <option value="Opciones">Selecciona una opción</option>
+                    <option value="insulinaTardia">Insulina Tardia</option>
                     <option value="desayuno">Desayuno</option>
                     <option value="almuerzo">Almuerzo</option>
                     <option value="merienda">Merienda</option>
                     <option value="cena">Cena</option>
                 </select>
+                <div id="camposDelForm">
+                    <label for="fecha">Fecha:</label>
+                    <input type="date" id="fecha" required>
 
+                    <label for="hora">Hora:</label>
+                    <input type="time" id="hora" required>
+
+                    <div id="insulinaTardiaContainer">
+                        <!-- Formulario de 'Insulina Efecto Tardio' -->
+                        <label for="insulinaTardia">Insulina Efecto Tardio:</label>
+                        <input type="number" id="insulinaTardia" min="0" value="32">
+                    </div>
+                    <div id="tipoDeComidaNormal">
+                        <label for="insulina">Insulina:</label>
+                        <input type="number" id="insulina" min="0">
+
+                        <label for="carbohidratos">Carbohidratos:</label>
+                        <input type="number" id="carbohidratos" min="0">
+
+                        <label for="glucosa">Glucosa en Sangre:</label>
+                        <input type="number" id="glucosa" min="0">
+
+                        <label for="comida">Comida:</label>
+                        <input type="text" id="comida" min="0">
+                    </div>
+                </div>
                 <button type="submit" class="boton boton-agregar">Agregar</button>
             </form>
             <section class="promedios">
                 <p class="promedio-insulina">Promedio de insulina por comida: <span id="promedioInsulina"></span></p>
-                <p class="promedio-glucosa">Promedio de carbohidratos por comida: <span id="promedioCarbohidratos"></span></p>
+                <p class="promedio-glucosa">Promedio de carbohidratos por comida: <span
+                        id="promedioCarbohidratos"></span></p>
                 <p class="promedio-glucosa">Promedio de glucosa en sangre: <span id="glucosaDiaria"></span></p>
             </section>
 
@@ -86,11 +96,13 @@
     <footer>
         <div class="logos-descargas" id="logos-descargas">
             <div class="contenedor-logo">
-                <button type="button" onclick="generarPDF(event)" class="boton boton-pdf"><i class="fas fa-file-pdf"></i></button>
+                <button type="button" onclick="generarPDF(event)" class="boton boton-pdf"><i
+                        class="fas fa-file-pdf"></i></button>
                 <span class="contenedor-logo-texto">Descargar PDF</span>
             </div>
             <div class="contenedor-logo">
-                <button type="button" onclick="generarExcel()" class="boton boton-excel"><i class="fas fa-file-excel"></i></button>
+                <button type="button" onclick="generarExcel()" class="boton boton-excel"><i
+                        class="fas fa-file-excel"></i></button>
                 <span class="contenedor-logo-texto">Descargar Excel</span>
             </div>
         </div>
